@@ -1637,7 +1637,7 @@ fn test_milestone_voting_insufficient_weight() {
     // Two users deposit
     let user2 = Address::generate(&env);
     token_client.transfer(&user, &user2, &300_000);
-    
+
     client.deposit(&user, &project_id, &300_000);
     client.deposit(&user2, &project_id, &300_000);
 
@@ -1703,10 +1703,10 @@ fn test_unauthorized_vote_start() {
     // Non-owner (e.g., admin or user) tries to start a vote - should fail
     let _result = client.try_start_milestone_vote(&project_id, &0, &3600);
     // Since mock_all_auths() is on, it will fail if require_auth() is called on the wrong address
-    // and that address isn't the one being called with. 
+    // and that address isn't the one being called with.
     // Wait, client.start_milestone_vote doesn't take a caller. It uses project.owner.require_auth().
     // So if mock_all_auths is on, it might succeed if not careful.
-    
+
     // Actually, to test unauthorized we usually use a separate client or don't mock all auths.
     // But for simplicity in this project's style, we rely on the host errors.
 }

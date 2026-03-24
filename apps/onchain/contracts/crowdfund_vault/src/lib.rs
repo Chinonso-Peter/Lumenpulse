@@ -429,17 +429,20 @@ impl CrowdfundVaultContract {
 
         // Set voting window
         let end_time = env.ledger().timestamp() + duration_seconds;
-        env.storage()
-            .persistent()
-            .set(&DataKey::MilestoneVoteWindow(project_id, milestone_id), &end_time);
+        env.storage().persistent().set(
+            &DataKey::MilestoneVoteWindow(project_id, milestone_id),
+            &end_time,
+        );
 
         // Reset votes for this milestone if needed (though they should be 0)
-        env.storage()
-            .persistent()
-            .set(&DataKey::MilestoneVotesFor(project_id, milestone_id), &0i128);
-        env.storage()
-            .persistent()
-            .set(&DataKey::MilestoneVotesAgainst(project_id, milestone_id), &0i128);
+        env.storage().persistent().set(
+            &DataKey::MilestoneVotesFor(project_id, milestone_id),
+            &0i128,
+        );
+        env.storage().persistent().set(
+            &DataKey::MilestoneVotesAgainst(project_id, milestone_id),
+            &0i128,
+        );
 
         // Emit event
         events::MilestoneVoteStartedEvent {
@@ -474,11 +477,11 @@ impl CrowdfundVaultContract {
         }
 
         // Check if already voted
-        if env
-            .storage()
-            .persistent()
-            .has(&DataKey::MilestoneVote(project_id, milestone_id, voter.clone()))
-        {
+        if env.storage().persistent().has(&DataKey::MilestoneVote(
+            project_id,
+            milestone_id,
+            voter.clone(),
+        )) {
             return Err(CrowdfundError::AlreadyVoted);
         }
 
