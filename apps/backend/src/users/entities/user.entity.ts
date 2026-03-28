@@ -14,6 +14,16 @@ export enum UserRole {
   ADMIN = 'admin',
 }
 
+export interface NotificationPreferences {
+  priceAlerts: boolean;
+  newsAlerts: boolean;
+  securityAlerts: boolean;
+}
+
+export interface UserPreferences {
+  notifications: NotificationPreferences;
+}
+
 @Entity('users')
 @Index(['role'])
 @Index(['createdAt'])
@@ -53,6 +63,18 @@ export class User {
     default: UserRole.USER,
   })
   role: UserRole;
+
+  @Column({
+    type: 'jsonb',
+    default: {
+      notifications: {
+        priceAlerts: true,
+        newsAlerts: true,
+        securityAlerts: true,
+      },
+    },
+  })
+  preferences: UserPreferences;
 
   @OneToMany(() => StellarAccount, (stellarAccount) => stellarAccount.user)
   stellarAccounts: StellarAccount[];
